@@ -1,0 +1,112 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 52.265078508875376,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 701.18269278110961,
+            "y": 131.21728500885411
+          },
+          "nodeIndex": "order_details",
+          "nodeLineageTag": "3fec97e5-7a2a-40f9-bcd3-9cc4dd1cdd25",
+          "size": {
+            "height": 244,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 15,
+            "y": 520.41174280360417
+          },
+          "nodeIndex": "orders",
+          "nodeLineageTag": "88a118b3-c71d-4e0c-83dd-b67a154bacdd",
+          "size": {
+            "height": 256,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1491.5580401778161,
+            "y": 14
+          },
+          "nodeIndex": "pizza_types",
+          "nodeLineageTag": "5614f384-ff75-4299-9dd7-3b9cefd986bb",
+          "size": {
+            "height": 291,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1512.3844863628422,
+            "y": 592.33403624569712
+          },
+          "nodeIndex": "pizzas",
+          "nodeLineageTag": "113939ba-e314-4aa6-ba2b-bcc70d847ef0",
+          "size": {
+            "height": 247,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 11.55804017781611,
+            "y": 0
+          },
+          "nodeIndex": "Date",
+          "nodeLineageTag": "ac5aa47d-3fb1-40ce-aa56-980416af592a",
+          "size": {
+            "height": 317,
+            "width": 402
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1784.826446185026,
+            "y": 343.66701812284856
+          },
+          "nodeIndex": "Metric Selector",
+          "nodeLineageTag": "f0a9fb30-928d-4f34-9906-11359d663f28",
+          "size": {
+            "height": 261,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2057.2684060072097,
+            "y": 319.66701812284856
+          },
+          "nodeIndex": "_Measures",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

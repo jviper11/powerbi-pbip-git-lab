@@ -1,0 +1,80 @@
+table orders
+	lineageTag: 88a118b3-c71d-4e0c-83dd-b67a154bacdd
+
+	column order_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2ece4d50-fa6f-4a2e-b456-31b9a9a60ed4
+		summarizeBy: none
+		sourceColumn: order_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 58e36932-89e7-4f7d-824e-3730d7e6d3ca
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column time
+		dataType: dateTime
+		formatString: Short Time
+		lineageTag: 344e506f-a35b-4b64-86cd-d7bc4730703e
+		summarizeBy: none
+		sourceColumn: time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column Hour
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4f2049d7-e5f9-408c-a760-2861b9bf3892
+		summarizeBy: none
+		sourceColumn: Hour
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column 'Hour label'
+		dataType: string
+		lineageTag: 6e532496-5dd0-4d7f-8e94-979fd96238e7
+		summarizeBy: none
+		sourceColumn: Hour label
+		sortByColumn: Hour
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition orders = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Jteja\Downloads\Pizza+Place+Sales\pizza_sales\orders.csv"),[Delimiter=",", Columns=3, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"order_id", Int64.Type}, {"date", type date}, {"time", type time}}),
+				    #"Inserted Hour" = Table.AddColumn(#"Changed Type", "Hour", each Time.Hour([time]), Int64.Type),
+				    #"Extracted Time" = Table.TransformColumns(#"Inserted Hour",{{"time", Time.StartOfHour, type time}}),
+				    #"Sorted Rows" = Table.Sort(#"Extracted Time",{{"time", Order.Ascending}}),
+				    #"Added Custom" = Table.AddColumn(#"Sorted Rows", "Hour label", each Time.ToText([time], "h tt"))
+				in
+				    #"Added Custom"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

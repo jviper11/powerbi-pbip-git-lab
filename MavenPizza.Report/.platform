@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "MavenPizza"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "426cbc8d-6ccf-4aaa-95e9-4d2c1e18ec4f"
+  }
+}

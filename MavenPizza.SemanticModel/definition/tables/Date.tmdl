@@ -1,0 +1,113 @@
+table Date
+	lineageTag: ac5aa47d-3fb1-40ce-aa56-980416af592a
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: ff8f3e05-f8bd-40f5-a0b4-1105659ba72a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: ad8956fe-eb8e-4d2a-9c7a-d44451073698
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: b3421029-de39-4f60-8dec-cd87ba9d1685
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 7f253aaa-11df-4cb3-bb91-1500f8594008
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Month
+		lineageTag: 5c5490fa-64e4-41fa-850a-f3c3f0cc4a6d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 60f871a0-8e57-4182-a25e-fd9aa06257aa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+		sortByColumn: 'Quarter Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Number'
+		formatString: 0
+		lineageTag: 211cf9aa-55e2-4a31-9da6-5f8c00727def
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Name'
+		lineageTag: 251dd38b-6f52-4bbb-ba94-b55de45771a6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday Name]
+		sortByColumn: 'Weekday Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Weekend'
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ce704b42-f73a-4b1a-974b-2c656955b906
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Weekend]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quarter Number' = QUARTER([Date])
+		formatString: 0
+		lineageTag: fc13f8a8-969f-4eac-9969-f804eb0420a9
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = calculated
+		mode: import
+		source = ```
+				
+				ADDCOLUMNS(
+				    CALENDARAUTO(),
+				    "Year", YEAR([Date]),
+				    "Month Number", MONTH([Date]),
+				    "Month Name", FORMAT([Date], "MMMM"),
+				    "Year-Month", FORMAT([Date], "YYYY-MM"),
+				    "Quarter", "Q" & QUARTER([Date]),
+				    "Weekday Number", WEEKDAY([Date], 2),   -- Monday = 1
+				    "Weekday Name", FORMAT([Date], "dddd"),
+				    "Is Weekend", IF(WEEKDAY([Date], 2) >= 6, TRUE(), FALSE())
+				)
+				
+				
+				```
+
+	annotation PBI_Id = 111d2ef11e9e46d1a536efdfcd8b9b9b
+

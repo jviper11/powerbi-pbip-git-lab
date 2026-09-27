@@ -1,0 +1,49 @@
+table 'Metric Selector'
+	lineageTag: f0a9fb30-928d-4f34-9906-11359d663f28
+
+	column 'Metric Selector'
+		lineageTag: 632b7ae3-df37-4092-ac83-531654f58d18
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Metric Selector Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Metric Selector Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Selector Fields'
+		isHidden
+		lineageTag: aad6e017-f90f-4ceb-b86c-61e8fbebd25a
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Metric Selector Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Selector Order'
+		isHidden
+		formatString: 0
+		lineageTag: 27573fe7-43f4-4637-b30f-6d1bebced718
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = User
+
+	partition 'Metric Selector' = calculated
+		mode: import
+		source =
+				{
+				    ("Total Orders", NAMEOF('_Measures'[Total Orders]), 0),
+				    ("Total Pizzas Sold", NAMEOF('_Measures'[Total Pizzas Sold]), 1),
+				    ("Total Sales", NAMEOF('_Measures'[Total Sales]), 2)
+				}
+
+	annotation PBI_Id = d5b40eee3df34c798d9ffa17b5b0e22e
+

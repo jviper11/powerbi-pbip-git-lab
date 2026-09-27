@@ -1,0 +1,17 @@
+relationship AutoDetected_83300b5a-968d-47a4-88b2-313eca87c90b
+	fromColumn: order_details.order_id
+	toColumn: orders.order_id
+
+relationship AutoDetected_4140e9cb-a052-430f-9c76-363234806a0d
+	fromColumn: order_details.pizza_id
+	toColumn: pizzas.pizza_id
+
+relationship AutoDetected_6e3d3fe5-0c61-4660-b41c-43ede6601aed
+	crossFilteringBehavior: bothDirections
+	fromColumn: pizzas.pizza_type_id
+	toColumn: pizza_types.pizza_type_id
+
+relationship 08181f16-32dd-c880-5bd0-001545942dba
+	fromColumn: orders.date
+	toColumn: Date.Date
+

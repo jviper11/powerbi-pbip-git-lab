@@ -1,0 +1,53 @@
+table pizza_types
+	lineageTag: 5614f384-ff75-4299-9dd7-3b9cefd986bb
+
+	column pizza_type_id
+		dataType: string
+		isHidden
+		lineageTag: f74e1a90-b14a-475c-a2a3-2b80380f5a7b
+		summarizeBy: none
+		sourceColumn: pizza_type_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: d7ede892-d5d1-482d-9494-f0aa2b9332e3
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 5d46737f-9c0c-4bdb-be30-0de80fe10519
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column ingredients
+		dataType: string
+		lineageTag: 4c8d6e0b-e144-4ac3-9516-c2331c4b8eb7
+		summarizeBy: none
+		sourceColumn: ingredients
+
+		annotation SummarizationSetBy = Automatic
+
+	partition pizza_types = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Jteja\Downloads\Pizza+Place+Sales\pizza_sales\pizza_types.csv"),[Delimiter=",", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"pizza_type_id", type text}, {"name", type text}, {"category", type text}, {"ingredients", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

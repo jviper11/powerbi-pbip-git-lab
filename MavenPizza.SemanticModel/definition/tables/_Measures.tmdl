@@ -1,0 +1,273 @@
+table _Measures
+	lineageTag: 5d3ed9c6-44cc-4dc4-8e4a-de0f326e08b9
+
+	measure 'Total Orders' = DISTINCTCOUNT(order_details[order_id])
+		formatString: #,0
+		lineageTag: a8d2a303-a27a-415f-9ed4-e27e0af41adf
+
+	measure 'Avg Order Value' = DIVIDE([Total Sales],[Total Orders])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: ae3281c5-46f0-4034-96b4-76e18d29f1b0
+
+	measure 'old total sales' = SUM(pizzas[price])
+		isHidden
+		lineageTag: f33fad9d-31ba-48e6-a419-f15ea882e931
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Check Pizza Filter' = ```
+			
+			COUNTROWS( VALUES(order_details[pizza_id]) )
+			
+			```
+		formatString: 0
+		isHidden
+		lineageTag: 94bbb8a4-bf29-4b86-882b-522d59ef4ba9
+
+	measure 'OrderID Duplicates' = ```
+			
+			CALCULATE(
+			    COUNTROWS(orders),
+			    ALLEXCEPT(orders, orders[order_id])
+			)
+			
+			```
+		formatString: 0
+		isHidden
+		lineageTag: 6ecb1186-7861-4fd5-92bf-72a14be456c2
+
+	measure 'Total Pizzas Sold' = ```
+			
+			SUM(order_details[quantity])
+			
+			```
+		formatString: #,0
+		lineageTag: cafe76d6-0701-4f7d-b932-51ce168d5523
+
+	measure 'Total Sales' = SUMX(order_details, order_details[quantity] * RELATED(pizzas[price]))
+		formatString: \$#,0.0;(\$#,0.0);\$#,0.0
+		lineageTag: 878c9501-c693-4102-bcf2-8378e923c9b5
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Order per Hour' = COUNT(order_details[order_details_id])
+		formatString: 0
+		lineageTag: 47e7b7cc-688d-4677-a4d3-09eb1ba1d0f0
+
+	measure 'Pizzas per Order' =
+			
+			DIVIDE([Total Pizzas Sold], [Total Orders])
+		lineageTag: 75baa14a-2269-4b79-a7d5-9c6c9d340a6c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Monthly Sales' =
+			
+			AVERAGEX(
+			    VALUES('Date'[Year-Month]),
+			    [Total Sales]
+			)
+		lineageTag: b6ead784-35f5-48ec-a0d4-47f9845f21c8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Monthly Orders' =
+			
+			AVERAGEX(
+			    VALUES('Date'[Year-Month]),
+			    [Total Orders]
+			)
+		lineageTag: b0dbe02e-2223-4d9b-8d3d-dfc32136d884
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Best Month Sales' =
+			
+			MAXX(
+			    VALUES('Date'[Year-Month]),
+			    [Total Sales]
+			)
+		lineageTag: 8fdd0a96-e6f4-40ce-8ad0-d7f2934d9a04
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Best Month Sales Text' =
+			
+			VAR TopMonthTable =
+			    TOPN(
+			        1,
+			        ADDCOLUMNS(
+			            SUMMARIZE(
+			                'Date',
+			                'Date'[Year-Month],
+			                'Date'[Month Name],
+			                'Date'[Month Number]
+			            ),
+			            "@Sales", [Total Sales]
+			        ),
+			        [@Sales],
+			        DESC,
+			        'Date'[Month Number],
+			        ASC
+			    )
+			VAR BestMonthName =
+			    MAXX(TopMonthTable, 'Date'[Month Name])
+			VAR BestMonthSales =
+			    MAXX(TopMonthTable, [@Sales])
+			RETURN
+			    "Best: " & BestMonthName & " " & FORMAT(DIVIDE(BestMonthSales, 1000), "$0.0K")
+		lineageTag: 742b998d-96f9-4d0e-806f-a8c4a7028c62
+
+	measure 'Avg Monthly Sales Text' =
+			
+			"Avg Month: " & FORMAT(DIVIDE([Avg Monthly Sales], 1000), "$0.0K")
+		lineageTag: b2b3d968-a7c0-47cd-8163-781946c20389
+
+	measure 'Pizzas per Order Text' =
+			
+			"Pizzas / Order: " & FORMAT([Pizzas per Order], "0.00")
+		lineageTag: 3b751416-265a-425a-b95d-07402878c78c
+
+	measure 'Best Month AOV Text' =
+			
+			VAR TopMonthTable =
+			    TOPN(
+			        1,
+			        ADDCOLUMNS(
+			            SUMMARIZE(
+			                'Date',
+			                'Date'[Year-Month],
+			                'Date'[Month Name],
+			                'Date'[Month Number]
+			            ),
+			            "@AOV", [Avg Order Value]
+			        ),
+			        [@AOV],
+			        DESC,
+			        'Date'[Month Number],
+			        ASC
+			    )
+			VAR BestMonthName =
+			    MAXX(TopMonthTable, 'Date'[Month Name])
+			VAR BestMonthAOV =
+			    MAXX(TopMonthTable, [@AOV])
+			RETURN
+			    "Best: " & BestMonthName & " " & FORMAT(BestMonthAOV, "$0.00")
+		lineageTag: e0b46022-1b2e-431b-bbcd-040407dbe013
+
+	measure 'Avg Monthly Orders Text' =
+			
+			"Avg Month: " & FORMAT([Avg Monthly Orders], "#,0")
+		lineageTag: 2606d3e1-b367-482b-863a-86c9ed842867
+
+	measure 'Best Month Orders Text' =
+			
+			VAR TopMonthTable =
+			    TOPN(
+			        1,
+			        ADDCOLUMNS(
+			            SUMMARIZE(
+			                'Date',
+			                'Date'[Year-Month],
+			                'Date'[Month Name],
+			                'Date'[Month Number]
+			            ),
+			            "@Orders", [Total Orders]
+			        ),
+			        [@Orders],
+			        DESC,
+			        'Date'[Month Number],
+			        ASC
+			    )
+			VAR BestMonthName =
+			    MAXX(TopMonthTable, 'Date'[Month Name])
+			VAR BestMonthOrders =
+			    MAXX(TopMonthTable, [@Orders])
+			RETURN
+			    "Best: " & BestMonthName & " " & FORMAT(BestMonthOrders, "#,0")
+		lineageTag: e4559328-e73f-414e-9e1d-03aad1030273
+
+	measure 'Pizzas per Order Short Text' =
+			
+			"Per Order: " & FORMAT([Pizzas per Order], "0.00")
+		lineageTag: ff3ae213-ea0f-44b8-893d-4816658292bd
+
+	measure 'Top Pizza by Quantity Text' =
+			
+			VAR TopPizzaTable =
+			    TOPN(
+			        1,
+			        ADDCOLUMNS(
+			            VALUES(pizza_types[name]),
+			            "@Qty", [Total Pizzas Sold]
+			        ),
+			        [@Qty],
+			        DESC
+			    )
+			VAR PizzaName =
+			    MAXX(TopPizzaTable, pizza_types[name])
+			VAR CleanName =
+			    SUBSTITUTE(
+			        SUBSTITUTE(PizzaName, "The ", ""),
+			        " Pizza",
+			        ""
+			    )
+			RETURN
+			    "Top: " & CleanName
+		lineageTag: 622a7458-c8f8-4507-972e-19593eee5519
+
+	measure 'vs Avg Selection' =
+			
+			[Total Sales] - AVERAGEX(ALLSELECTED(pizza_types), [Total Sales])
+		formatString: \$#,0.0;(\$#,0.0);\$#,0.0
+		lineageTag: 7eed296e-26d7-48a6-95e1-6f5de162acaf
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'vs Avg All' =
+			
+			[Total Sales] - AVERAGEX(ALL(pizza_types[name]), [Total Sales])
+		formatString: \$#,0.0;(\$#,0.0);\$#,0.0
+		lineageTag: dad23542-e3f5-4f19-8bf8-a4249df84929
+
+	measure 'vs Avg All Dynamic' =
+			
+			VAR SelectedMetric = SELECTEDVALUE('Metric Selector'[Metric Selector])
+			RETURN
+			SWITCH(SelectedMetric,
+			    "Total Sales", [Total Sales] - AVERAGEX(ALL(pizza_types[name]), [Total Sales]),
+			    "Total orders", [Total orders] - AVERAGEX(ALL(pizza_types[name]), [Total orders]),
+			    "Total Pizzas Sold", [Total Pizzas Sold] - AVERAGEX(ALL(pizza_types[name]), [Total Pizzas Sold])
+			)
+		lineageTag: 121a3b95-fb07-415a-9bb8-fb186ac916eb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Insight Text' =
+			
+			VAR SelectedMetric = SELECTEDVALUE('Metric Selector'[Metric Selector])
+			RETURN
+			SWITCH(SelectedMetric,
+			    "Total Sales", "Peak revenue occurs at 12 PM ($106K) and again at 5–6 PM. Friday is the highest revenue day. Consider promotions on Sundays to recover slower day performance.",
+			    "Total orders", "Order volume peaks at 12–1 PM with 2.5K orders and again at 5–6 PM. Friday leads all days with 3.5K orders. Sunday is the slowest — a prime target for promotions.",
+			    "Total Pizzas Sold", "Most pizzas are sold during the 12 PM lunch rush and 5–6 PM dinner rush. Friday drives the highest pizza volume across the week."
+			)
+		lineageTag: 318a98e2-cade-480b-968e-cf7bbba54f03
+
+	measure 'Test Text' = SELECTEDVALUE('Metric Selector'[Metric Selector], "Nothing selected")
+		lineageTag: f6238c89-5db5-4f1f-8d58-af2f0c160c36
+
+	column Value
+		lineageTag: 96315de2-47d4-4974-bb74-52924040338c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = { "Measures" }
+
+	annotation PBI_Id = ed0c4fe7cdce49b482291fa55f28e91c
+
