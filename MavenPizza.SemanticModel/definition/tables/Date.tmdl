@@ -12,6 +12,16 @@ table Date
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure 'Average Order Value' =
+			
+			DIVIDE(
+			    [Total Sales],
+			    [Total Orders]
+			)
+		lineageTag: 9222e6c7-5be3-4ff6-bb90-cb63a1d076e2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	column Date
 		isKey
 		formatString: General Date
