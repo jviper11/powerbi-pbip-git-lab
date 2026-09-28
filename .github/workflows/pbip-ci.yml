@@ -1,0 +1,31 @@
+name: PBIP CI
+
+"on":
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-pbip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify PBIP project files exist
+        run: |
+          test -f MavenPizza.pbip
+          test -d MavenPizza.Report
+          test -d MavenPizza.SemanticModel
+
+      - name: Block PBIX files
+        run: |
+          if find . -name "*.pbix" | grep -q .; then
+            echo "PBIX files should not be committed to this PBIP repository."
+            exit 1
+          fi
+
+      - name: Verify semantic model definition exists
+        run: |
+          test -d MavenPizza.SemanticModel/definition
