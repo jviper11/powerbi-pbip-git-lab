@@ -2,6 +2,16 @@ table Date
 	lineageTag: ac5aa47d-3fb1-40ce-aa56-980416af592a
 	dataCategory: Time
 
+	measure 'Average Pizzas Per Order' =
+			
+			DIVIDE(
+			    [Total Pizzas Sold],
+			    [Total Orders]
+			)
+		lineageTag: 78f1a5c1-79d0-415f-b740-50a929ffb87a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	column Date
 		isKey
 		formatString: General Date
